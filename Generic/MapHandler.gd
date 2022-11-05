@@ -140,17 +140,21 @@ func ActivateTiles(hex_array) -> void:
 	for temp_coord in hex_array:
 		ActivateTile(temp_coord)
 
-#For pathing purposes
+#For pathing purposes, for melee units
 func GenerateHeatMap(coord_origin : Vector3) -> void:
 	#clear existing values
 	for tile in tileNodes:
 		tileNodes[tile]["node"].pathValue = 999
+		tileNodes[tile]["node"].pathValueAlt = 999
 	#call recursive function
 	RecGenHeatMap(coord_origin, 0)
+	
+	#Generating heat manp for ranged units
+	RangedHeatMapInit(coord_origin)
 
 func RecGenHeatMap(coord : Vector3, value : int, valid_tiles := [1, 4]) -> void:
 	tileNodes[str(coord)]["node"].pathValue = value
-	tileNodes[str(coord)]["node"].ShowPathVal()
+	#tileNodes[str(coord)]["node"].ShowPathVal()
 	var rec_coord_list = []
 	
 	for dir in Dir2Vect:
@@ -163,18 +167,62 @@ func RecGenHeatMap(coord : Vector3, value : int, valid_tiles := [1, 4]) -> void:
 	for rec_coord in rec_coord_list:
 		RecGenHeatMap(rec_coord, value + 1)
 
-func GetEnemyPath(coord : Vector3, type := 0, to_player := true) -> Array:
+#For ranged unit pathing purposes
+func RangedHeatMapInit(coord : Vector3, valid_tiles := [1,3,4]) -> void:
+	#setting direct adjacent lines to 0
+	for dir in Dir2Vect:
+		RangedHeatMapRecA(coord, Dir2Vect[dir], valid_tiles)
+	
+	RangedHeatMapRecB(validCoords)
+
+func RangedHeatMapRecA(coord : Vector3, coord_dir : Vector3, valid_tiles) -> void:
+	if tileNodes[str(coord)]["node"].tileType in valid_tiles:
+		tileNodes[str(coord)]["node"].pathValueAlt = 0
+		tileNodes[str(coord)]["node"].ShowPathVal()
+		if str(coord + coord_dir) in tileNodes:
+			RangedHeatMapRecA(coord + coord_dir, coord_dir, valid_tiles)
+
+func TileGetMinAdj(coord : Vector3) -> int:
+	var res := 999
+	for dir in Dir2Vect:
+		if tileNodes[str(coord)][dir] != null:
+			res = min(tileNodes[str(coord + Dir2Vect[dir])]["node"].pathValueAlt, res)
+	return res
+
+func RangedHeatMapRecB(coord_list : Array, valid_tiles := [1,4]) -> void:
+	var unknown_tiles = []
+	for coord in coord_list:
+		if tileNodes[str(coord)]["node"].pathValueAlt == 999 and tileNodes[str(coord)]["node"].tileType in valid_tiles:
+			var temp_val = TileGetMinAdj(coord)
+			if temp_val == 999:
+				unknown_tiles.append(coord)
+			else:
+				tileNodes[str(coord)]["node"].pathValueAlt = temp_val + 1
+				tileNodes[str(coord)]["node"].ShowPathVal()
+	if unknown_tiles.size() > 0:
+		RangedHeatMapRecB(unknown_tiles, valid_tiles)
+
+func GetEnemyPath(coord : Vector3, type := 0, to_player := 1) -> Array:
 	#Scans surrounding tiles pathValue, returns an array of min values
-	#type unused, mainly for range type, 0 - melee, 1 - ranged
-	#to_player also unused for now
+	#type unused, mainly for range type, 0 - melee, 1 - ranged, add numbers when needed
+	#to_player currently unused
 	var temp_min = 99
 	var temp_array = []
 	for dir in Dir2Vect:
-		if str(Dir2Vect[dir] + coord) in tileNodes:
-			if tileNodes[str(Dir2Vect[dir] + coord)]["node"].pathValue < temp_min:
-				temp_min = tileNodes[str(Dir2Vect[dir] + coord)]["node"].pathValue
-				temp_array = []
-				temp_array.append(Dir2Vect[dir] + coord)
-			elif tileNodes[str(Dir2Vect[dir] + coord)]["node"].pathValue == temp_min:
-				temp_array.append(Dir2Vect[dir] + coord)
+		if type == 0:
+			if str(Dir2Vect[dir] + coord) in tileNodes:
+				if tileNodes[str(Dir2Vect[dir] + coord)]["node"].pathValue < temp_min:
+					temp_min = tileNodes[str(Dir2Vect[dir] + coord)]["node"].pathValue
+					temp_array = []
+					temp_array.append(Dir2Vect[dir] + coord)
+				elif tileNodes[str(Dir2Vect[dir] + coord)]["node"].pathValue == temp_min:
+					temp_array.append(Dir2Vect[dir] + coord)
+		else:
+			if str(Dir2Vect[dir] + coord) in tileNodes:
+				if tileNodes[str(Dir2Vect[dir] + coord)]["node"].pathValueAlt < temp_min:
+					temp_min = tileNodes[str(Dir2Vect[dir] + coord)]["node"].pathValueAlt
+					temp_array = []
+					temp_array.append(Dir2Vect[dir] + coord)
+				elif tileNodes[str(Dir2Vect[dir] + coord)]["node"].pathValueAlt == temp_min:
+					temp_array.append(Dir2Vect[dir] + coord)
 	return temp_array

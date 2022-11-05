@@ -6,6 +6,7 @@ var mouseInside := false
 var tileActive := false
 var tileClicked := false
 var pathValue := -1		#Used for pathfinding purposes
+var pathValueAlt := -1	#Used for pathfinding but for ranged enemies (will just go to nearest adjacent line)
 var tileType := 1	#For checking if walkable
 	# 1 - floor, 2 - wall, 3 - lava, 4 - door
 const HexWidth = 60
@@ -29,7 +30,7 @@ func SetSprite(spr_path) -> void : #spr_path should be a preloaded item
 	$Sprite.texture = spr_path
 
 func ShowPathVal() -> void:
-	$Label.text = str(pathValue)
+	$Label.text = str(pathValueAlt)
 
 func _on_Area2D_mouse_entered():
 	mouseInside = true

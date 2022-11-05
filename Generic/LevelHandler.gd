@@ -146,29 +146,13 @@ func EnemyAction() -> void:
 			MeleeEnemyAction(enemy)
 	EndTurn()
 
-func RangedEnemyAction(list_key : String):
-	pass
-
-func MeleeEnemyAction(temp_enemy):
-	#list_key because in a previous iteration I was using the dictionary thus sending keys
-	var list_key = str(temp_enemy.hexCoord)
-	var coord_check = hexInst.GetAdjacent(temp_enemy.hexCoord)
-	
-	#Check if player nearby, attack else move
-	var playerNearby := false
-	var playerCoord := Vector3.ZERO
-	for coord in coord_check:
-		if str(coord) in objMap:
-			if objMap[str(coord)].bodyType == "player":
-				playerNearby = true
-				playerCoord = coord
-	#Attack
-	if playerNearby:
-		temp_enemy.MoveDir(playerChar.hexCoord - temp_enemy.hexCoord)
-		playerChar.Damage()
-	#move
+func RangedEnemyAction(temp_enemy):
+	#check if player in range
+	if activeMap.tileNodes[str(temp_enemy.hexCoord)]["node"].pathValueAlt == 0:
+		#attack player code here
+		pass
 	else:
-		var e_path = activeMap.GetEnemyPath(temp_enemy.hexCoord)
+		var e_path = activeMap.GetEnemyPath(temp_enemy.hexCoord,1)
 		var path_available = false
 		var new_path = Vector3.ZERO
 		var prev_coord = temp_enemy.hexCoord
@@ -180,7 +164,39 @@ func MeleeEnemyAction(temp_enemy):
 				break
 		
 		if path_available:
-			objMap.erase(list_key)
+			objMap.erase(str(temp_enemy.hexCoord))
+			objMap[str(new_path)] = temp_enemy
+			temp_enemy.hexCoord = new_path
+			temp_enemy.MovePos(prev_coord - new_path)
+
+func MeleeEnemyAction(temp_enemy):
+	var coord_check = hexInst.GetAdjacent(temp_enemy.hexCoord)
+	
+	#Check if player nearby, attack else move
+	var player_nearby := false
+	for coord in coord_check:
+		if str(coord) in objMap:
+			if objMap[str(coord)].bodyType == "player":
+				player_nearby = true
+	#Attack
+	if player_nearby:
+		temp_enemy.MoveDir(playerChar.hexCoord - temp_enemy.hexCoord)
+		playerChar.Damage()
+	#move
+	else:
+		var e_path = activeMap.GetEnemyPath(temp_enemy.hexCoord,0,-1)
+		var path_available = false
+		var new_path = Vector3.ZERO
+		var prev_coord = temp_enemy.hexCoord
+		
+		for path in e_path:
+			if !(str(path) in objMap):
+				path_available = true
+				new_path = path
+				break
+		
+		if path_available:
+			objMap.erase(str(temp_enemy.hexCoord))
 			objMap[str(new_path)] = temp_enemy
 			temp_enemy.hexCoord = new_path
 			temp_enemy.MovePos(prev_coord - new_path)
