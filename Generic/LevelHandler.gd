@@ -52,9 +52,23 @@ func GenerateEnemies() -> void:
 		temp_char.hexCoord = enemyCoords[i]
 		temp_char.position = hexInst.Cube2Coord(enemyCoords[i])
 		add_child(temp_char)
-		temp_char.play("Zombie_Idle")
+		SetEnemyStats(temp_char,"bow")
 		enemyList.append(temp_char)
 		objMap[str(enemyCoords[i])] = temp_char
+
+func SetEnemyStats(enemy : Node2D, type : String) -> void : 
+	var temp_stats = hexInst.EnemyStats[type]
+	
+	enemy.play(type)
+	
+	if "shield" in temp_stats:
+		enemy.gShield = temp_stats["shield"]
+	if "aType" in temp_stats:
+		enemy.attackType = temp_stats["aType"]
+	if "aCD" in temp_stats:
+		enemy.attackCooldown = temp_stats["aCD"]
+	if "aPrep" in temp_stats:
+		enemy.attackPrep = temp_stats["aPrep"]
 
 func StartTurn() -> void:
 	activeMap.DeactivateTiles()

@@ -20,6 +20,22 @@
 # Vector operations should still work as normal (so vector3 should work fine) but will need a
 #	converter to 2d positioning
 
+#Just add necessary stats when it gets complicated
+const EnemyStats = {
+	"grunt" : {
+		"shield" : false,
+		"aType" : 0,
+		"aCD" : 1,
+		"aPrep" : 0
+	},
+	"bow" : {
+		"shield" : false,
+		"aType" : 1,
+		"aCD" : 1,
+		"aPrep" : 0
+	}
+}
+
 const HexWidth = 64
 var cubeDirectionVectors = [
 	Vector3(+1, 0, -1), Vector3(+1, -1, 0), Vector3(0, -1, +1), 
