@@ -3,6 +3,7 @@ extends Node2D
 var hexInst = preload("res://Instructions.gd").new()
 const MapBase = preload("res://Generic/MapHandler.tscn")
 const CharBase = preload("res://Generic/Character.tscn")
+const ObjBase = preload("res://Generic/Object.tscn")
 const MapSize = 8
 var activeMap
 var playerChar
@@ -154,7 +155,7 @@ func ProcessAction(action_code := 0):
 func EnemyAction() -> void:
 	#Iterate through enemy list
 	for enemy in enemyList:
-		if enemy.attackType:
+		if enemy.attackType > 0:
 			RangedEnemyAction(enemy)
 		else:
 			MeleeEnemyAction(enemy)
@@ -163,8 +164,16 @@ func EnemyAction() -> void:
 func RangedEnemyAction(temp_enemy):
 	#check if player in range
 	if activeMap.tileNodes[str(temp_enemy.hexCoord)]["node"].pathValueAlt == 0:
-		#attack player code here
-		pass
+		if temp_enemy.attackType == 1:
+			if RangedCheckInBetween(playerChar.hexCoord, temp_enemy.hexCoord):
+				playerChar.Damage()
+				var temp_proj = ObjBase.instance()
+				temp_proj.position = temp_enemy.position
+				temp_proj.finalPos = playerChar.position
+				add_child(temp_proj)
+		elif temp_enemy.attackType == 2:
+			#Mage
+			pass
 	else:
 		var e_path = activeMap.GetEnemyPath(temp_enemy.hexCoord,1)
 		var path_available = false
@@ -182,6 +191,20 @@ func RangedEnemyAction(temp_enemy):
 			objMap[str(new_path)] = temp_enemy
 			temp_enemy.hexCoord = new_path
 			temp_enemy.MovePos(prev_coord - new_path)
+
+func RangedCheckInBetween(coord_e : Vector3, coord_p : Vector3) -> bool:
+	#Checks if there are any objects in between the two points
+	#checks for coors stored in objMap
+	var slope = coord_p - coord_e
+	var dir = slope/(max(slope.x,max(slope.y,slope.z)))
+	var temp_tile = coord_e + dir
+	var res = true
+	while temp_tile != coord_p:
+		if str(temp_tile) in objMap:
+			res = false
+			break
+		temp_tile += dir
+	return res
 
 func MeleeEnemyAction(temp_enemy):
 	var coord_check = hexInst.GetAdjacent(temp_enemy.hexCoord)

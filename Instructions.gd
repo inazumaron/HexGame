@@ -33,6 +33,12 @@ const EnemyStats = {
 		"aType" : 1,
 		"aCD" : 1,
 		"aPrep" : 0
+	},
+	"mage" : {
+		"shield" : false,
+		"aType" : 2,
+		"aCD" : 1,
+		"aPrep" : 0
 	}
 }
 
