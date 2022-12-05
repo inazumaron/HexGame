@@ -1,7 +1,70 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Generic/MapTile.gd" type="Script" id=1]
-[ext_resource path="res://Resc/Tiles/Dirt.png" type="Texture" id=2]
+[ext_resource path="res://Resc/Tiles/hexTiles 01.png" type="Texture" id=3]
+
+[sub_resource type="AtlasTexture" id=1]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 660, 0, 330, 330 )
+
+[sub_resource type="AtlasTexture" id=2]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 990, 0, 330, 330 )
+
+[sub_resource type="AtlasTexture" id=4]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 0, 0, 330, 330 )
+
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 1320, 0, 330, 330 )
+
+[sub_resource type="AtlasTexture" id=6]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 0, 330, 330, 330 )
+
+[sub_resource type="AtlasTexture" id=5]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 330, 0, 330, 330 )
+
+[sub_resource type="SpriteFrames" id=7]
+animations = [ {
+"frames": [ SubResource( 1 ) ],
+"loop": true,
+"name": "path",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 2 ) ],
+"loop": true,
+"name": "stairs",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 4 ) ],
+"loop": true,
+"name": "lava",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 3 ) ],
+"loop": true,
+"name": "foilage",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 6 ) ],
+"loop": true,
+"name": "altar_Enna",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 5 ) ],
+"loop": true,
+"name": "wall",
+"speed": 5.0
+} ]
 
 [node name="MapTile" type="Node2D"]
 self_modulate = Color( 5, 5, 5, 1 )
@@ -13,13 +76,12 @@ scale = Vector2( 8, 8 )
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
 polygon = PoolVector2Array( -4, -2, 0, -4, 4, -2, 4, 2, 0, 4, -4, 2 )
 
-[node name="Sprite" type="Sprite" parent="."]
-position = Vector2( -1.90735e-06, 1.90735e-06 )
-scale = Vector2( 0.24, 0.21 )
-texture = ExtResource( 2 )
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+scale = Vector2( 0.23, 0.21 )
+frames = SubResource( 7 )
+animation = "wall"
 
 [node name="Label" type="Label" parent="."]
-visible = false
 margin_left = -20.0
 margin_top = -7.0
 margin_right = 20.0

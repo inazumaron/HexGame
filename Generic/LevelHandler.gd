@@ -41,7 +41,7 @@ func GeneratePlayer() -> void:
 	temp_char.maxHp = 3
 	temp_char.gHp = 3
 	add_child(temp_char)
-	temp_char.play("Calli_Idle_right")
+	temp_char.play("Enna_a")
 	playerChar = temp_char
 	objMap[str(playerChar.hexCoord)] = playerChar
 
@@ -254,7 +254,7 @@ func GetActiveTiles() -> Array:
 	#get movement tiles
 	for t_dir in hexInst.cubeDirectionVectors:
 		var temp_vec = char_pos + t_dir
-		if temp_vec in activeMap.validCoords:
+		if activeMap.IsWalkable(temp_vec):
 			if !objMap.has(str(temp_vec)):
 				active_tiles.append(temp_vec)
 	#get skill tiles

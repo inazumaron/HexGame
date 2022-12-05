@@ -29,8 +29,11 @@ func _draw():
 func SetSprite(spr_path) -> void : #spr_path should be a preloaded item
 	$Sprite.texture = spr_path
 
+func Play(anim : String) -> void :
+	$AnimatedSprite.play(anim)
+
 func ShowPathVal() -> void:
-	$Label.text = str(pathValueAlt)
+	$Label.text = str(pathValue)
 
 func _on_Area2D_mouse_entered():
 	mouseInside = true

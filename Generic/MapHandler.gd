@@ -1,6 +1,7 @@
 extends Node2D
 
 var mapSize = 6 # map width + 1
+var level = "11" #refer to Data.gd for resoning for this format
 const TileBase = preload("res://Generic/MapTile.tscn")
 const Dir2Vect = {
 	"NW" : Vector3(+1, 0, -1),
@@ -95,24 +96,36 @@ func GenerateTiles(size:int):
 					SetTileSlot(Vector3(i,j,k), temp_tile)
 					add_child(temp_tile)
 					tile_dict[str(Vector3(i,j,k))] = temp_tile
-					temp_tile.SetSprite(Textures["floor"])
+					temp_tile.Play("path")
 					validCoords.append(Vector3(i,j,k))
 	
-	#Generate walls
-	var wall_index = 0
-	for i in range(0,12):
-		wall_index = randi()%validCoords.size()
-		while wall_index == 0:
-			wall_index = randi()%validCoords.size()
-		tile_dict[str(validCoords[wall_index])].SetSprite(Textures["wall"])
-		tile_dict[str(validCoords[wall_index])].tileType = 2
+	#Fetch level data
+	var level_data_index = Data.MapTemplates[level][0]
+	var lava_count = level_data_index.x
+	var wall_count = level_data_index.y
+	var altar_count = level_data_index.z
+	
+	#Generate lava
+	if lava_count > 0:
+		for i in range(1, lava_count+1):
+			tile_dict[str(Data.MapTemplates[level][i])].Play("lava")
+			tile_dict[str(Data.MapTemplates[level][i])].tileType = 3
+	
+	#generate walls
+	if wall_count > 0:
+		for i in range(lava_count+1, wall_count+lava_count+1):
+			tile_dict[str(Data.MapTemplates[level][i])].Play("wall")
+			tile_dict[str(Data.MapTemplates[level][i])].tileType = 2
+	
+	#generate altars
+	if altar_count > 0:
+		for i in range(wall_count+lava_count+1, wall_count+lava_count+altar_count+1):
+			tile_dict[str(Data.MapTemplates[level][i])].Play("altar_enna")
+			tile_dict[str(Data.MapTemplates[level][i])].tileType = 1
 	
 	#Generating door
-	var rand_index = 0
-	while rand_index == 0:
-		rand_index = randi()%validCoords.size()
-	tile_dict[str(validCoords[rand_index])].SetSprite(Textures["door"])
-	tile_dict[str(validCoords[rand_index])].tileType = 4
+	tile_dict[str(Data.MapTemplates[level][-1])].Play("stairs")
+	tile_dict[str(Data.MapTemplates[level][-1])].tileType = 4
 	
 	#Creating tile nodes
 	for tile in tile_dict:
@@ -226,3 +239,10 @@ func GetEnemyPath(coord : Vector3, type := 0, to_player := 1) -> Array:
 				elif tileNodes[str(Dir2Vect[dir] + coord)]["node"].pathValueAlt == temp_min:
 					temp_array.append(Dir2Vect[dir] + coord)
 	return temp_array
+
+#For player processing and other miscellaneous things from levelHandler
+func IsWalkable(coord : Vector3) -> bool:
+	if str(coord) in tileNodes:
+		if tileNodes[str(coord)]["node"].tileType in Data.playerWalkableVals:
+			return true
+	return false
