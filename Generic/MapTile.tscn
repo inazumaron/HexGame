@@ -13,10 +13,10 @@ flags = 4
 atlas = ExtResource( 3 )
 region = Rect2( 990, 0, 330, 330 )
 
-[sub_resource type="AtlasTexture" id=4]
+[sub_resource type="AtlasTexture" id=5]
 flags = 4
 atlas = ExtResource( 3 )
-region = Rect2( 0, 0, 330, 330 )
+region = Rect2( 330, 0, 330, 330 )
 
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
@@ -28,10 +28,10 @@ flags = 4
 atlas = ExtResource( 3 )
 region = Rect2( 0, 330, 330, 330 )
 
-[sub_resource type="AtlasTexture" id=5]
+[sub_resource type="AtlasTexture" id=4]
 flags = 4
 atlas = ExtResource( 3 )
-region = Rect2( 330, 0, 330, 330 )
+region = Rect2( 0, 0, 330, 330 )
 
 [sub_resource type="SpriteFrames" id=7]
 animations = [ {
@@ -45,9 +45,9 @@ animations = [ {
 "name": "stairs",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 4 ) ],
+"frames": [ SubResource( 5 ) ],
 "loop": true,
-"name": "lava",
+"name": "wall",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 3 ) ],
@@ -60,9 +60,9 @@ animations = [ {
 "name": "altar_Enna",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 5 ) ],
+"frames": [ SubResource( 4 ) ],
 "loop": true,
-"name": "wall",
+"name": "lava",
 "speed": 5.0
 } ]
 
@@ -82,6 +82,7 @@ frames = SubResource( 7 )
 animation = "wall"
 
 [node name="Label" type="Label" parent="."]
+visible = false
 margin_left = -20.0
 margin_top = -7.0
 margin_right = 20.0

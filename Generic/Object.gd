@@ -13,6 +13,9 @@ var gVelocity := Vector2.ZERO
 var onHitAction := 0
 # 0 - do nothing, 1 - damage, 2 - push, 3 - push or damage (if cant push)
 var gPersist := 0 #number of turns to persist upon landing on tile
+# value for telling level handler what to do/ what this is when used as terrain
+var value := 0
+# 0 - altar, 1 - fire
 
 func _ready():
 	if objType == "projectile":
@@ -26,3 +29,6 @@ func _process(delta):
 		if gPersist == 0:
 			queue_free()
 		set_process(false)
+
+func Play(anim : String) -> void:
+	$AnimatedSprite.play(anim)

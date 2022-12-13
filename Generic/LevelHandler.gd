@@ -10,15 +10,15 @@ var playerChar
 var playerPrevCoord : Vector3
 var enemyList = []
 var objMap = {}		#Dictionary containing character/enemies with their coord as keys
+var terMap = {}		#Dictionary containing terrain objects with coord as keys
 var deadKeys = []	#To contain dead enemies after player action been processed
 var processTimer := 0.0
 var processMode := 0 #Determines what process do
+var levelVal = "11"		#to send to data for getting specific level data
 # 0 - awaiting player input
 # 1 - enemy damage delay
 
 #-----------------------------level specific variables
-var enemyCount = 2
-var enemyCoords = [Vector3(-2,2,0), Vector3(-1,0,1)]
 var floorLevel = 1
 
 func _ready():
@@ -30,6 +30,7 @@ func _ready():
 
 func GenerateMap() -> void:
 	var temp_map = MapBase.instance()
+	temp_map.level = levelVal
 	temp_map.mapSize = MapSize
 	temp_map.z_index = 0
 	add_child(temp_map)
@@ -46,16 +47,17 @@ func GeneratePlayer() -> void:
 	objMap[str(playerChar.hexCoord)] = playerChar
 
 func GenerateEnemies() -> void:
-	for i in range(0,enemyCount):
+	var enemy_count = Data.EnemyData[levelVal].size()
+	for i in range(0,enemy_count):
 		var temp_char = CharBase.instance()
 		temp_char.z_index = 1
 		temp_char.bodyType = "enemy"
-		temp_char.hexCoord = enemyCoords[i]
-		temp_char.position = hexInst.Cube2Coord(enemyCoords[i])
+		temp_char.hexCoord = Data.EnemyData[levelVal][i][1]
+		temp_char.position = hexInst.Cube2Coord(temp_char.hexCoord)
 		add_child(temp_char)
-		SetEnemyStats(temp_char,"bow")
+		SetEnemyStats(temp_char,Data.EnemyData[levelVal][i][0])
 		enemyList.append(temp_char)
-		objMap[str(enemyCoords[i])] = temp_char
+		objMap[str(temp_char.hexCoord)] = temp_char
 
 func SetEnemyStats(enemy : Node2D, type : String) -> void : 
 	var temp_stats = hexInst.EnemyStats[type]
@@ -173,7 +175,8 @@ func RangedEnemyAction(temp_enemy):
 				add_child(temp_proj)
 		elif temp_enemy.attackType == 2:
 			#Mage
-			pass
+			if RangedCheckInBetween(playerChar.hexCoord, temp_enemy.hexCoord):
+				CreateObj(playerChar.hexCoord, 0)
 	else:
 		var e_path = activeMap.GetEnemyPath(temp_enemy.hexCoord,1)
 		var path_available = false
@@ -260,3 +263,12 @@ func GetActiveTiles() -> Array:
 	#get skill tiles
 	#filter for occupied spaces/ invalid terrains
 	return active_tiles
+
+func CreateObj(coord_a : Vector3, value : int, persist := 1) -> void:
+	var temp_obj = ObjBase.instance()
+	temp_obj.objType = "terrain"
+	temp_obj.value = value
+	temp_obj.gPersist = persist
+	temp_obj.position = hexInst.Cube2Coord(coord_a)
+	add_child(temp_obj)
+	terMap[str(coord_a)] = temp_obj

@@ -1,9 +1,10 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://Resc/Sprites/CharSprEnna.png" type="Texture" id=1]
 [ext_resource path="res://Generic/Character.gd" type="Script" id=2]
 [ext_resource path="res://Resc/Sprites/e_g_zombie_sprite.png" type="Texture" id=3]
 [ext_resource path="res://Resc/Sprites/e_g_fandead_sprite.png" type="Texture" id=4]
+[ext_resource path="res://Resc/Sprites/EnemySpr.png" type="Texture" id=5]
 
 [sub_resource type="AtlasTexture" id=10]
 flags = 4
@@ -24,6 +25,26 @@ region = Rect2( 64, 0, 32, 32 )
 flags = 4
 atlas = ExtResource( 3 )
 region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=28]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 400, 200, 200 )
+
+[sub_resource type="AtlasTexture" id=29]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 200, 400, 200, 200 )
+
+[sub_resource type="AtlasTexture" id=30]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 400, 400, 200, 200 )
+
+[sub_resource type="AtlasTexture" id=31]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 600, 400, 200, 200 )
 
 [sub_resource type="AtlasTexture" id=14]
 flags = 4
@@ -54,6 +75,26 @@ region = Rect2( 128, 0, 32, 32 )
 flags = 4
 atlas = ExtResource( 4 )
 region = Rect2( 160, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=32]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 0, 200, 200 )
+
+[sub_resource type="AtlasTexture" id=33]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 200, 0, 200, 200 )
+
+[sub_resource type="AtlasTexture" id=34]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 400, 0, 200, 200 )
+
+[sub_resource type="AtlasTexture" id=35]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 600, 0, 200, 200 )
 
 [sub_resource type="AtlasTexture" id=20]
 flags = 4
@@ -95,45 +136,65 @@ flags = 4
 atlas = ExtResource( 1 )
 region = Rect2( 600, 200, 200, 200 )
 
-[sub_resource type="AtlasTexture" id=28]
+[sub_resource type="AtlasTexture" id=36]
 flags = 4
-atlas = ExtResource( 1 )
-region = Rect2( 0, 400, 200, 200 )
-
-[sub_resource type="AtlasTexture" id=29]
-flags = 4
-atlas = ExtResource( 1 )
-region = Rect2( 200, 400, 200, 200 )
-
-[sub_resource type="AtlasTexture" id=30]
-flags = 4
-atlas = ExtResource( 1 )
-region = Rect2( 400, 400, 200, 200 )
-
-[sub_resource type="AtlasTexture" id=31]
-flags = 4
-atlas = ExtResource( 1 )
-region = Rect2( 600, 400, 200, 200 )
-
-[sub_resource type="AtlasTexture" id=32]
-flags = 4
-atlas = ExtResource( 1 )
+atlas = ExtResource( 5 )
 region = Rect2( 0, 0, 200, 200 )
 
-[sub_resource type="AtlasTexture" id=33]
+[sub_resource type="AtlasTexture" id=37]
 flags = 4
-atlas = ExtResource( 1 )
+atlas = ExtResource( 5 )
 region = Rect2( 200, 0, 200, 200 )
 
-[sub_resource type="AtlasTexture" id=34]
+[sub_resource type="AtlasTexture" id=38]
 flags = 4
-atlas = ExtResource( 1 )
+atlas = ExtResource( 5 )
 region = Rect2( 400, 0, 200, 200 )
 
-[sub_resource type="AtlasTexture" id=35]
+[sub_resource type="AtlasTexture" id=39]
 flags = 4
-atlas = ExtResource( 1 )
+atlas = ExtResource( 5 )
 region = Rect2( 600, 0, 200, 200 )
+
+[sub_resource type="AtlasTexture" id=40]
+flags = 4
+atlas = ExtResource( 5 )
+region = Rect2( 0, 400, 200, 200 )
+
+[sub_resource type="AtlasTexture" id=41]
+flags = 4
+atlas = ExtResource( 5 )
+region = Rect2( 200, 400, 200, 200 )
+
+[sub_resource type="AtlasTexture" id=42]
+flags = 4
+atlas = ExtResource( 5 )
+region = Rect2( 400, 400, 200, 200 )
+
+[sub_resource type="AtlasTexture" id=43]
+flags = 4
+atlas = ExtResource( 5 )
+region = Rect2( 600, 400, 200, 200 )
+
+[sub_resource type="AtlasTexture" id=44]
+flags = 4
+atlas = ExtResource( 5 )
+region = Rect2( 0, 200, 200, 200 )
+
+[sub_resource type="AtlasTexture" id=45]
+flags = 4
+atlas = ExtResource( 5 )
+region = Rect2( 200, 200, 200, 200 )
+
+[sub_resource type="AtlasTexture" id=46]
+flags = 4
+atlas = ExtResource( 5 )
+region = Rect2( 400, 200, 200, 200 )
+
+[sub_resource type="AtlasTexture" id=47]
+flags = 4
+atlas = ExtResource( 5 )
+region = Rect2( 600, 200, 200, 200 )
 
 [sub_resource type="SpriteFrames" id=9]
 animations = [ {
@@ -142,9 +203,19 @@ animations = [ {
 "name": "grunt",
 "speed": 5.0
 }, {
+"frames": [ SubResource( 28 ), SubResource( 29 ), SubResource( 30 ), SubResource( 31 ) ],
+"loop": true,
+"name": "Enna_c",
+"speed": 5.0
+}, {
 "frames": [ SubResource( 14 ), SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 18 ), SubResource( 19 ) ],
 "loop": true,
 "name": "bow",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 32 ), SubResource( 33 ), SubResource( 34 ), SubResource( 35 ) ],
+"loop": true,
+"name": "Enna_a",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 23 ) ],
@@ -157,14 +228,19 @@ animations = [ {
 "name": "Enna_b",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 28 ), SubResource( 29 ), SubResource( 30 ), SubResource( 31 ) ],
+"frames": [ SubResource( 36 ), SubResource( 37 ), SubResource( 38 ), SubResource( 39 ) ],
 "loop": true,
-"name": "Enna_c",
+"name": "aloupeep",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 32 ), SubResource( 33 ), SubResource( 34 ), SubResource( 35 ) ],
+"frames": [ SubResource( 40 ), SubResource( 41 ), SubResource( 42 ), SubResource( 43 ) ],
 "loop": true,
-"name": "Enna_a",
+"name": "famillie",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 44 ), SubResource( 45 ), SubResource( 46 ), SubResource( 47 ) ],
+"loop": true,
+"name": "phantomo",
 "speed": 5.0
 } ]
 
@@ -175,5 +251,4 @@ script = ExtResource( 2 )
 position = Vector2( 0, -16 )
 scale = Vector2( 0.35, 0.35 )
 frames = SubResource( 9 )
-animation = "Enna_d"
-frame = 2
+animation = "phantomo"

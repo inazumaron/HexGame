@@ -22,19 +22,19 @@
 
 #Just add necessary stats when it gets complicated
 const EnemyStats = {
-	"grunt" : {
+	"aloupeep" : {
 		"shield" : false,
 		"aType" : 0,
 		"aCD" : 1,
 		"aPrep" : 0
 	},
-	"bow" : {
+	"phantomo" : {
 		"shield" : false,
 		"aType" : 1,
 		"aCD" : 1,
 		"aPrep" : 0
 	},
-	"mage" : {
+	"famillie" : {
 		"shield" : false,
 		"aType" : 2,
 		"aCD" : 1,

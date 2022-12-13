@@ -27,8 +27,8 @@ const MapTemplates = {
 # number of enemies can be acquired from the number of elements in data, for templates, enemy type
 # can be randomly decided on 
 const EnemyData = {
-	"10" : [["grunt", Vector3(-2,2,0)], ["grunt", Vector3(-1,0,1)]],
-	"11" : [["",Vector3(2,-3,1)], ["grunt",Vector3(0,2,-2)], ["grunt",Vector3(-2,1,1)]],
+	"10" : [["aloupeep", Vector3(-2,2,0)], ["aloupeep", Vector3(-1,0,1)]],
+	"11" : [["phantomo",Vector3(2,-3,1)], ["aloupeep",Vector3(0,2,-2)], ["aloupeep",Vector3(-2,1,1)]],
 	"12" : []
 }
 
