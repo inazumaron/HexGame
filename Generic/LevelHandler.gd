@@ -5,18 +5,21 @@ const MapBase = preload("res://Generic/MapHandler.tscn")
 const CharBase = preload("res://Generic/Character.tscn")
 const ObjBase = preload("res://Generic/Object.tscn")
 const MapSize = 8
+const AltarOffset = Vector2(0, -16)
 var activeMap
 var playerChar
 var playerPrevCoord : Vector3
+var playerStartCoord := Vector3(2,-1,-1)
 var enemyList = []
 var objMap = {}		#Dictionary containing character/enemies with their coord as keys
 var terMap = {}		#Dictionary containing terrain objects with coord as keys
+var dooMap = {}		#Dictionary containing doodad ocjects (altar and stairs) with coord as keys
 var deadKeys = []	#To contain dead enemies after player action been processed
 var processTimer := 0.0
 var processMode := 0 #Determines what process do
-var levelVal = "11"		#to send to data for getting specific level data
 # 0 - awaiting player input
 # 1 - enemy damage delay
+var levelVal = "11"		#to send to data for getting specific level data
 
 #-----------------------------level specific variables
 var floorLevel = 1
@@ -26,6 +29,19 @@ func _ready():
 	GenerateMap()
 	GeneratePlayer()
 	GenerateEnemies()
+	# getting/adding map doodads
+	var level_data = Data.MapTemplates[levelVal][0]
+	dooMap[str(Data.MapTemplates[levelVal][-1])] = "stairs"
+	
+	if level_data.z > 0:
+		for i in range(level_data.x + level_data.y + 1, level_data.x + level_data.y + level_data.z + 1):
+			var temp_doodad = ObjBase.instance()
+			temp_doodad.objType = "doodad"
+			temp_doodad.position = hexInst.Cube2Coord(Data.MapTemplates[levelVal][i]) + AltarOffset
+			add_child(temp_doodad)
+			temp_doodad.Play("altar")
+			dooMap[Data.MapTemplates[levelVal][i]] = temp_doodad
+	
 	StartTurn()
 
 func GenerateMap() -> void:
@@ -38,9 +54,11 @@ func GenerateMap() -> void:
 
 func GeneratePlayer() -> void:
 	var temp_char = CharBase.instance()
+	temp_char.hexCoord = playerStartCoord
 	temp_char.z_index = 1
 	temp_char.maxHp = 3
 	temp_char.gHp = 3
+	temp_char.position = hexInst.Cube2Coord(playerStartCoord)
 	add_child(temp_char)
 	temp_char.play("Enna_a")
 	playerChar = temp_char
@@ -173,6 +191,7 @@ func RangedEnemyAction(temp_enemy):
 				temp_proj.position = temp_enemy.position
 				temp_proj.finalPos = playerChar.position
 				add_child(temp_proj)
+				temp_proj.set_process(true)
 		elif temp_enemy.attackType == 2:
 			#Mage
 			if RangedCheckInBetween(playerChar.hexCoord, temp_enemy.hexCoord):
@@ -249,6 +268,12 @@ func DamageEnemy() -> void:
 	enemyList.erase(temp_enemy)
 
 func EndTurn():
+	#Correct position deviations
+	playerChar.position = hexInst.Cube2Coord(playerChar.hexCoord)
+	#Apply terrain damage
+	#Check player position
+	if str(playerChar.hexCoord) in dooMap:
+		pass
 	StartTurn()
 
 func GetActiveTiles() -> Array:
@@ -271,4 +296,5 @@ func CreateObj(coord_a : Vector3, value : int, persist := 1) -> void:
 	temp_obj.gPersist = persist
 	temp_obj.position = hexInst.Cube2Coord(coord_a)
 	add_child(temp_obj)
+	temp_obj.Play("fire")
 	terMap[str(coord_a)] = temp_obj

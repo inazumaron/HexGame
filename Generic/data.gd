@@ -28,7 +28,7 @@ const MapTemplates = {
 # can be randomly decided on 
 const EnemyData = {
 	"10" : [["aloupeep", Vector3(-2,2,0)], ["aloupeep", Vector3(-1,0,1)]],
-	"11" : [["phantomo",Vector3(2,-3,1)], ["aloupeep",Vector3(0,2,-2)], ["aloupeep",Vector3(-2,1,1)]],
+	"11" : [["famillie",Vector3(2,-3,1)], ["aloupeep",Vector3(0,2,-2)], ["aloupeep",Vector3(-2,1,1)]],
 	"12" : []
 }
 

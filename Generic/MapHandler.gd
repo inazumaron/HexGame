@@ -120,7 +120,7 @@ func GenerateTiles(size:int):
 	#generate altars
 	if altar_count > 0:
 		for i in range(wall_count+lava_count+1, wall_count+lava_count+altar_count+1):
-			tile_dict[str(Data.MapTemplates[level][i])].Play("altar_enna")
+			tile_dict[str(Data.MapTemplates[level][i])].Play("altar_Enna")
 			tile_dict[str(Data.MapTemplates[level][i])].tileType = 1
 	
 	#Generating door

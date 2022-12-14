@@ -18,8 +18,7 @@ var value := 0
 # 0 - altar, 1 - fire
 
 func _ready():
-	if objType == "projectile":
-		set_process(true)
+	set_process(false)
 
 func _process(delta):
 	gVelocity = position.direction_to(finalPos) * gSpeed
