@@ -73,6 +73,7 @@ func MovePos(new_coord : Vector3) -> void:
 	animMode = 1
 
 func Damage() -> void:
+	print("damaged")
 	if gShield:
 		gShield = false
 	else:

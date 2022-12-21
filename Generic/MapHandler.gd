@@ -246,3 +246,10 @@ func IsWalkable(coord : Vector3) -> bool:
 		if tileNodes[str(coord)]["node"].tileType in Data.playerWalkableVals:
 			return true
 	return false
+	
+func IsValid(coord : Vector3, valid_list) -> bool:
+	#same as above but for more custom value checking
+	if str(coord) in tileNodes:
+		if tileNodes[str(coord)]["node"].tileType in valid_list:
+			return true
+	return false

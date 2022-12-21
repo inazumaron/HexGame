@@ -12,7 +12,7 @@ var playerPrevCoord : Vector3
 var playerStartCoord := Vector3(2,-1,-1)
 var enemyList = []
 var objMap = {}		#Dictionary containing character/enemies with their coord as keys
-var terMap = {}		#Dictionary containing terrain objects with coord as keys
+var terMap = {}		#Dictionary containing terrain objects with coord as keys (fire)
 var dooMap = {}		#Dictionary containing doodad ocjects (altar and stairs) with coord as keys
 var deadKeys = []	#To contain dead enemies after player action been processed
 var processTimer := 0.0
@@ -195,7 +195,12 @@ func RangedEnemyAction(temp_enemy):
 		elif temp_enemy.attackType == 2:
 			#Mage
 			if RangedCheckInBetween(playerChar.hexCoord, temp_enemy.hexCoord):
-				CreateObj(playerChar.hexCoord, 0)
+				var temp_data = {
+					"coord_e" : temp_enemy.hexCoord,
+					"coord_p" : playerChar.hexCoord,
+					"value" : 1
+				}
+				MiscAttackHandler("famillie", temp_data)
 	else:
 		var e_path = activeMap.GetEnemyPath(temp_enemy.hexCoord,1)
 		var path_available = false
@@ -271,9 +276,18 @@ func EndTurn():
 	#Correct position deviations
 	playerChar.position = hexInst.Cube2Coord(playerChar.hexCoord)
 	#Apply terrain damage
-	#Check player position
-	if str(playerChar.hexCoord) in dooMap:
-		pass
+	var temp_to_free_terrain = []
+	for terrain in terMap:
+		if terMap[terrain].value == 1: #fire
+			if terrain in objMap:
+				objMap[terrain].Damage()
+			terMap[terrain].gPersist -= 1
+			if terMap[terrain].gPersist < 0:
+				temp_to_free_terrain.append(terrain)
+	for i in temp_to_free_terrain:
+		terMap[i].queue_free()
+		terMap.erase(i)
+				
 	StartTurn()
 
 func GetActiveTiles() -> Array:
@@ -289,7 +303,21 @@ func GetActiveTiles() -> Array:
 	#filter for occupied spaces/ invalid terrains
 	return active_tiles
 
-func CreateObj(coord_a : Vector3, value : int, persist := 1) -> void:
+func MiscAttackHandler(type: String, data) -> void:
+	#handles attacks that are more complicated to simply do
+	if type == "famillie":
+		var slope = data["coord_p"] - data["coord_e"]
+		var dir = slope/(max(slope.x,max(slope.y,slope.z)))
+		var temp_tile = data["coord_e"] + dir
+		while temp_tile in activeMap.validCoords:
+			if activeMap.IsValid(temp_tile,[1,3,4]):
+				CreateObj(temp_tile, data["value"])
+				temp_tile += dir
+			else:
+				break
+
+
+func CreateObj(coord_a : Vector3, value : int, persist := 2) -> void:
 	var temp_obj = ObjBase.instance()
 	temp_obj.objType = "terrain"
 	temp_obj.value = value
