@@ -20,7 +20,7 @@ var processMode := 0 #Determines what process do
 # 0 - awaiting player input
 # 1 - enemy damage delay
 var levelVal = "11"		#to send to data for getting specific level data
-
+var levelValAlt = Vector2(1,1)
 #-----------------------------level specific variables
 var floorLevel = 1
 
@@ -136,6 +136,13 @@ func _process(delta): #for monitoring clicked tiles
 func CharAction():
 	processMode = -1
 	var temp_val = activeMap.tileValue
+	print("tv ",temp_val)
+	if str(temp_val) in dooMap:
+		if dooMap[str(temp_val)] == "stairs":
+			pass
+		else: #altar
+			pass
+		print()
 	#If action is move (i.e tile clicked is adjacent to player)
 	playerPrevCoord = playerChar.hexCoord
 	objMap.erase(str(playerChar.hexCoord))
@@ -311,11 +318,11 @@ func MiscAttackHandler(type: String, data) -> void:
 		var temp_tile = data["coord_e"] + dir
 		while temp_tile in activeMap.validCoords:
 			if activeMap.IsValid(temp_tile,[1,3,4]):
-				CreateObj(temp_tile, data["value"])
+				if activeMap.IsValid(temp_tile,[1,4]):
+					CreateObj(temp_tile, data["value"])
 				temp_tile += dir
 			else:
 				break
-
 
 func CreateObj(coord_a : Vector3, value : int, persist := 2) -> void:
 	var temp_obj = ObjBase.instance()

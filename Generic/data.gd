@@ -5,7 +5,7 @@ extends Node
 # which needs to carry over levelhandlers
 
 #Map template format for easier handling
-# 2 digits, 1st digit = fixed level - 1, random room template - 2-9
+# 2 digits, 1st digit = fixed level - 1, for random, value determines difficulty - 2-9
 # 2nd digit levels/variations 0-9
 #Data meaning - data will all be Vector3, the 1st vector3 will dictate:
 # (x,y,z)	x - # of lava, y - # of walls, z - # of altars, last entry will always be coord of stairs
