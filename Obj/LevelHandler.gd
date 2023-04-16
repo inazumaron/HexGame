@@ -5,6 +5,7 @@ const charBase = preload("res://Obj/CharObj.tscn")
 const objBase = preload("res://Obj/Objects.tscn")
 const sfxBase = preload("res://Obj/SFX.tscn")
 const uiBase = preload("res://Obj/UIHandler.tscn")
+const lvlupBase = preload("res://Obj/LevelUpUI.tscn")
 var HexInstr = preload("res://Obj/HexInstr.gd").new()
 
 const sfxOffset = 0.5 #offset when adding sfx to character
@@ -22,6 +23,7 @@ var processMode = 0
 var processAfter4 = 2
 var mapObj
 var uiObj
+var lvlupObj : Node2D
 #Difficulty 0 - easy, 1 - normal, 2 - hard
 var levelData = {
 	"type" : "story",
@@ -170,6 +172,7 @@ func StartTurn():
 func _process(delta):
 	var tempData = null #passing sfx values
 	#Ignore numbering, they are just the order I made them in
+	#last used number: 8
 	if processMode == 0: #Waiting for player input
 		var res = mapObj.CheckTiles()
 		if res[0]:
@@ -192,7 +195,6 @@ func _process(delta):
 		if len(enemyDamaged) > 0:
 			tempData2 = enemyDamaged.pop_front()
 			var tempDir = (tempData2[0].position - playerObj.position)/2
-			print("td ",tempDir)
 			sfxObj = sfxBase.instance()
 			sfxObj.manualFree = true
 			sfxObj.position = playerObj.position + (tempDir)
@@ -203,6 +205,10 @@ func _process(delta):
 			processAfter4 = 7
 		else:
 			PostEnemyDamaging() #Damaging enemies finished
+	if processMode == 8:	#Wait for player to select skill from lvlup ui
+		if lvlupObj.skillSelected:
+			lvlupObj.queue_free()
+			ProcessEnemyActions()
 	#=================   Enemy processes   ========================================
 	if processMode == 2: #Handle enemy animations
 		processAfter4 = 2 #set to default behaviour
@@ -308,21 +314,28 @@ func ProcessPlayerAction(res):
 
 func PostEnemyDamaging():
 	set_process(false)
+	var tempTile = mapObj.GetTile(playerObj.Coord)
 	#Check tile landed
-	if false: #If tile landed is stairs
+	if tempTile['struct'] == 'stairs': #If tile landed is stairs
 		ProcessStairs()
-	elif false:
-		ProcessAltar()
+	elif tempTile['struct'] == 'altar':
+		ProcessAltar(tempTile['structData'])
 	else:
 		ProcessEnemyActions()
 
 func ProcessStairs():
 	#If player steps on stairs, end level
+	print('stairs entered, exiting')
 	pass
 
-func ProcessAltar():
-	ProcessEnemyActions()
-	pass
+func ProcessAltar(data):
+	#get skills from data
+	var choices = Data.GetSkillFromData(data)
+	lvlupObj = lvlupBase.instance()
+	lvlupObj.choices = choices
+	add_child(lvlupObj)
+	processMode = 8
+	set_process(true)
 
 func ProcessEnemyActions():
 	#Get heatmap
